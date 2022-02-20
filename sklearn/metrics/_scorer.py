@@ -18,6 +18,9 @@ ground truth labeling (or ``None`` in the case of unsupervised models).
 #          Arnaud Joly <arnaud.v.joly@gmail.com>
 # License: Simplified BSD
 
+from memory_profiler import profile
+import gc
+
 from collections.abc import Iterable
 from functools import partial
 from collections import Counter
@@ -385,6 +388,7 @@ class _ThresholdScorer(_BaseScorer):
         return ", needs_threshold=True"
 
 
+@profile(precision=6)
 def get_scorer(scoring):
     """Get a scorer from string.
 

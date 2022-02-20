@@ -10,6 +10,9 @@ Logistic Regression
 #         Simon Wu <s8wu@uwaterloo.ca>
 #         Arthur Mensch <arthur.mensch@m4x.org
 
+from memory_profiler import profile
+import gc
+
 import numbers
 import warnings
 
@@ -1062,6 +1065,7 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
         self.n_jobs = n_jobs
         self.l1_ratio = l1_ratio
 
+    @profile(precision=6)
     def fit(self, X, y, sample_weight=None):
         """
         Fit the model according to the given training data.
@@ -1275,6 +1279,26 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
             self.coef_ = self.coef_[:, :-1]
         else:
             self.intercept_ = np.zeros(n_classes)
+
+        del solver
+        del C_
+        del penalty
+        #del solver
+        del _dtype
+        del X
+        del y
+        del multi_class
+        del max_squared_sum
+        del classes_
+        del n_classes
+        del warm_start_coef
+        del path_func
+        del prefer
+        del n_threads
+        del fold_coefs_
+        del n_iter_
+        del n_features
+        gc.collect()
 
         return self
 
@@ -1999,6 +2023,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
 
         return self
 
+    @profile(precision=6)
     def score(self, X, y, sample_weight=None):
         """Score using the `scoring` option on the given test data and labels.
 

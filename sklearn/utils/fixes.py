@@ -10,6 +10,9 @@ at which the fix is no longer needed.
 #
 # License: BSD 3 clause
 
+from memory_profiler import profile
+import gc
+
 from functools import update_wrapper
 import functools
 
@@ -141,6 +144,7 @@ def _take_along_axis(arr, indices, axis):
 
 
 # remove when https://github.com/joblib/joblib/issues/1071 is fixed
+@profile(precision=6)
 def delayed(function):
     """Decorator used to capture the arguments of a function."""
 

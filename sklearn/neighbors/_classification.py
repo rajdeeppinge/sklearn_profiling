@@ -8,6 +8,9 @@
 #
 # License: BSD 3 clause (C) INRIA, University of Amsterdam
 
+from memory_profiler import profile
+import gc
+
 import numpy as np
 from scipy import stats
 from ..utils.extmath import weighted_mode
@@ -177,6 +180,7 @@ class KNeighborsClassifier(KNeighborsMixin, ClassifierMixin, NeighborsBase):
         )
         self.weights = weights
 
+    @profile(precision=6)
     def fit(self, X, y):
         """Fit the k-nearest neighbors classifier from the training dataset.
 
@@ -199,6 +203,7 @@ class KNeighborsClassifier(KNeighborsMixin, ClassifierMixin, NeighborsBase):
 
         return self._fit(X, y)
 
+    @profile(precision=6)
     def predict(self, X):
         """Predict the class labels for the provided data.
 
@@ -243,6 +248,19 @@ class KNeighborsClassifier(KNeighborsMixin, ClassifierMixin, NeighborsBase):
 
         if not self.outputs_2d_:
             y_pred = y_pred.ravel()
+
+
+        del neigh_ind
+        del neigh_dist
+        del classes_
+        del _y
+        del n_outputs
+        del n_queries
+        del weights
+        del k
+        del classes_k
+        del X
+        gc.collect()
 
         return y_pred
 

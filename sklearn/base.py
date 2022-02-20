@@ -3,6 +3,8 @@
 # Author: Gael Varoquaux <gael.varoquaux@normalesup.org>
 # License: BSD 3 clause
 
+from memory_profiler import profile
+
 import copy
 import warnings
 from collections import defaultdict
@@ -492,6 +494,7 @@ class BaseEstimator:
 
             warnings.warn(message, FutureWarning)
 
+    @profile(precision=6)
     def _validate_data(
         self,
         X="no_validation",
@@ -598,6 +601,19 @@ class BaseEstimator:
 
         if not no_val_X and check_params.get("ensure_2d", True):
             self._check_n_features(X, reset=reset)
+
+
+        del no_val_X
+        del no_val_y
+        del default_check_params
+        del check_params
+        del reset
+        del validate_separately
+        del X
+        del y
+
+        import gc
+        gc.collect()
 
         return out
 

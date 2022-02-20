@@ -11,6 +11,9 @@
 #          Robert Layton <robertlayton@gmail.com>
 # License: BSD 3 clause
 
+from memory_profiler import profile
+import gc
+
 import warnings
 
 import numpy as np
@@ -392,6 +395,7 @@ def k_means(
         return est.cluster_centers_, est.labels_, est.inertia_
 
 
+@profile(precision=6)
 def _kmeans_single_elkan(
     X,
     sample_weight,
@@ -553,6 +557,7 @@ def _kmeans_single_elkan(
     return labels, inertia, centers, i + 1
 
 
+@profile(precision=6)
 def _kmeans_single_lloyd(
     X,
     sample_weight,
@@ -689,6 +694,24 @@ def _kmeans_single_lloyd(
             )
 
     inertia = _inertia(X, sample_weight, centers, labels, n_threads)
+
+    del n_clusters
+    del centers_new
+    del labels_old
+    del weight_in_clusters
+    del center_shift
+    del lloyd_iter
+    del strict_convergence
+    del center_shift_tot
+    del X
+    del sample_weight
+    del centers_init
+    del max_iter
+    del verbose
+    del x_squared_norms
+    del tol
+    del n_threads
+    gc.collect()
 
     return labels, inertia, centers, i + 1
 
@@ -1072,6 +1095,7 @@ class KMeans(
                         f"OMP_NUM_THREADS={active_threads}"
                     )
 
+    @profile(precision=6)
     def _init_centroids(self, X, x_squared_norms, init, random_state, init_size=None):
         """Compute the initial centroids.
 
@@ -1129,8 +1153,18 @@ class KMeans(
         if sp.issparse(centers):
             centers = centers.toarray()
 
+        del n_samples
+        del n_clusters
+        del X
+        del x_squared_norms
+        del init
+        del random_state
+        del init_size
+        gc.collect()
+
         return centers
 
+    @profile(precision=6)
     def fit(self, X, y=None, sample_weight=None):
         """Compute k-means clustering.
 
@@ -1252,6 +1286,26 @@ class KMeans(
         self.labels_ = best_labels
         self.inertia_ = best_inertia
         self.n_iter_ = best_n_iter
+        
+        del random_state
+        del sample_weight
+        del init
+        del init_is_array_like
+        del X_mean
+        del x_squared_norms
+        del best_labels
+        del labels
+        del best_centers
+        del centers
+        del best_inertia
+        del inertia
+        del best_n_iter
+        del n_iter_
+        del distinct_clusters
+        del X
+        del y
+        gc.collect()
+
         return self
 
     def fit_predict(self, X, y=None, sample_weight=None):
@@ -1728,6 +1782,7 @@ class MiniBatchKMeans(KMeans):
         self.init_size = init_size
         self.reassignment_ratio = reassignment_ratio
 
+    @profile(precision=6)
     def _check_params(self, X):
         super()._check_params(X)
 
