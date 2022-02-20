@@ -6,6 +6,11 @@ Multi-class / multi-label utility function
 ==========================================
 
 """
+
+from memory_profiler import profile
+import gc
+
+
 from collections.abc import Sequence
 from itertools import chain
 import warnings
@@ -177,6 +182,7 @@ def is_multilabel(y):
         )
 
 
+@profile(precision=6)
 def check_classification_targets(y):
     """Ensure that target y is of a non-regression type.
 

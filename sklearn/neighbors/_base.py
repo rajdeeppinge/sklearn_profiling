@@ -6,6 +6,9 @@
 #          Multi-output support by Arnaud Joly <a.joly@ulg.ac.be>
 #
 # License: BSD 3 clause (C) INRIA, University of Amsterdam
+
+from memory_profiler import profile
+
 from functools import partial
 
 import warnings
@@ -396,6 +399,7 @@ class NeighborsBase(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         if self.metric in ["wminkowski", "minkowski"] and effective_p < 1:
             raise ValueError("p must be greater or equal to one for minkowski metric")
 
+    @profile(precision=6)
     def _fit(self, X, y=None):
         if self._get_tags()["requires_y"]:
             if not isinstance(X, (KDTree, BallTree, NeighborsBase)):
@@ -659,6 +663,7 @@ class KNeighborsMixin:
             result = neigh_ind
         return result
 
+    @profile(precision=6)
     def kneighbors(self, X=None, n_neighbors=None, return_distance=True):
         """Find the K-neighbors of a point.
 

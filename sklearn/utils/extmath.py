@@ -11,6 +11,8 @@ Extended math utilities.
 #          Giorgio Patrini
 # License: BSD 3 clause
 
+from memory_profiler import profile
+
 import warnings
 
 import numpy as np
@@ -48,6 +50,7 @@ def squared_norm(x):
     return np.dot(x, x)
 
 
+#@profile(precision=6)
 def row_norms(X, squared=False):
     """Row-wise (squared) Euclidean norm of X.
 
